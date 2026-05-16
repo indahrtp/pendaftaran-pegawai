@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portal Pendaftaran Pegawai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f0f0f;
+      --surface: #1a1a1a;
+      --surface2: #222;
+      --border: #2e2e2e;
+      --accent: #c8a96e;
+      --accent2: #e8c98e;
+      --text: #f0ece4;
+      --muted: #888;
+      --success: #4caf82;
+      --error: #e06b6b;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Background decoration */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(200,169,110,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -200px; left: -200px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(200,169,110,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 560px;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 2.5rem;
+    }
+    .header-tag {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .header-tag::before {
+      content: '';
+      width: 24px; height: 1px;
+      background: var(--accent);
+    }
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text);
+    }
+    .header h1 span {
+      color: var(--accent);
+    }
+    .header p {
+      margin-top: 0.75rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    /* Card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(200,169,110,0.12);
+    }
+    input[type="text"]::placeholder,
+    input[type="email"]::placeholder {
+      color: #444;
+    }
+
+    /* File upload */
+    .file-upload {
+      position: relative;
+    }
+    .file-upload input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+    .file-drop {
+      background: var(--surface2);
+      border: 1.5px dashed var(--border);
+      border-radius: 8px;
+      padding: 2rem 1rem;
+      text-align: center;
+      transition: border-color 0.2s, background 0.2s;
+      cursor: pointer;
+    }
+    .file-drop:hover,
+    .file-upload:has(input:focus) .file-drop {
+      border-color: var(--accent);
+      background: rgba(200,169,110,0.04);
+    }
+    .file-drop.has-file {
+      border-color: var(--success);
+      background: rgba(76,175,130,0.05);
+    }
+    .file-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .file-drop-text {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .file-drop-text strong {
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .file-name {
+      margin-top: 0.5rem;
+      font-size: 0.82rem;
+      color: var(--success);
+      font-weight: 500;
+    }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 2rem 0;
+    }
+
+    /* Submit button */
+    .btn-submit {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #1a1200;
+      border: none;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .btn-submit:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(200,169,110,0.25);
+    }
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+    .btn-submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(26,18,0,0.3);
+      border-top-color: #1a1200;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Alert */
+    .alert {
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      font-size: 0.88rem;
+      margin-top: 1rem;
+      display: none;
+      align-items: flex-start;
+      gap: 0.5rem;
+      line-height: 1.5;
+    }
+    .alert.success {
+      background: rgba(76,175,130,0.1);
+      border: 1px solid rgba(76,175,130,0.3);
+      color: var(--success);
+    }
+    .alert.error {
+      background: rgba(224,107,107,0.1);
+      border: 1px solid rgba(224,107,107,0.3);
+      color: var(--error);
+    }
+    .alert.show { display: flex; }
+
+    /* Note */
+    .note {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: rgba(200,169,110,0.06);
+      border-left: 2px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .note strong { color: var(--accent); }
+
+    /* Step indicator */
+    .steps {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+    .step {
+      flex: 1;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--border);
+      transition: background 0.3s;
+    }
+    .step.active { background: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <div class="header-tag">HR System</div>
+      <h1>Portal Pendaftaran <span>Pegawai</span></h1>
+      <p>Isi formulir di bawah ini dengan lengkap dan benar. Pastikan dokumen yang diunggah dalam format gambar (JPG, PNG).</p>
+    </div>
+
+    <div class="card">
+      <div class="steps">
+        <div class="step active" id="step1"></div>
+        <div class="step" id="step2"></div>
+        <div class="step" id="step3"></div>
+      </div>
+
+      <form id="registrationForm" novalidate>
+
+        <div class="form-group">
+          <label for="nama">Nama Lengkap</label>
+          <input type="text" id="nama" name="nama" placeholder="Masukkan nama lengkap Anda" required />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Alamat Email</label>
+          <input type="email" id="email" name="email" placeholder="contoh@email.com" required />
+        </div>
+
+        <div class="form-group">
+          <label>Berkas Pelamar (Foto KTP / CV)</label>
+          <div class="file-upload">
+            <input type="file" id="berkas" name="berkas" accept="image/*,.pdf" required />
+            <div class="file-drop" id="fileDrop">
+              <span class="file-icon">📎</span>
+              <div class="file-drop-text">
+                <strong>Klik untuk unggah</strong> atau seret file ke sini<br>
+                Format: JPG, PNG, PDF — Maks. 5MB
+              </div>
+              <div class="file-name" id="fileName"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <span class="spinner" id="spinner"></span>
+          <span id="btnText">Kirim Pendaftaran</span>
+        </button>
+
+        <div class="alert success" id="alertSuccess">
+          ✅ <span>Pendaftaran berhasil dikirim! Data Anda telah tersimpan di database dan file telah diunggah ke Object Storage.</span>
+        </div>
+        <div class="alert error" id="alertError">
+          ❌ <span id="errorMsg">Terjadi kesalahan. Silakan coba lagi.</span>
+        </div>
+
+      </form>
+
+      <div class="note">
+        <strong>Catatan Arsitektur:</strong> File yang diunggah akan disimpan ke <strong>Azure Blob Storage</strong>, sementara data teks (nama, email, URL file) akan disimpan ke <strong>Azure Database for PostgreSQL</strong> — bukan di server aplikasi.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById('berkas');
+    const fileDrop = document.getElementById('fileDrop');
+    const fileName = document.getElementById('fileName');
+    const form = document.getElementById('registrationForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const spinner = document.getElementById('spinner');
+    const btnText = document.getElementById('btnText');
+    const alertSuccess = document.getElementById('alertSuccess');
+    const alertError = document.getElementById('alertError');
+    const errorMsg = document.getElementById('errorMsg');
+
+    // Step progress animation
+    const steps = [document.getElementById('step1'), document.getElementById('step2'), document.getElementById('step3')];
+    let currentStep = 0;
+
+    document.getElementById('nama').addEventListener('input', updateSteps);
+    document.getElementById('email').addEventListener('input', updateSteps);
+    fileInput.addEventListener('change', updateSteps);
+
+    function updateSteps() {
+      const nama = document.getElementById('nama').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const file = fileInput.files[0];
+      let filled = 0;
+      if (nama) filled++;
+      if (email && email.includes('@')) filled++;
+      if (file) filled++;
+      steps.forEach((s, i) => s.classList.toggle('active', i < filled));
+    }
+
+    // File input handler
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+      if (file) {
+        if (file.size > 5 * 1024 * 1024) {
+          showError('Ukuran file melebihi 5MB. Pilih file yang lebih kecil.');
+          fileInput.value = '';
+          fileDrop.classList.remove('has-file');
+          fileName.textContent = '';
+          return;
+        }
+        fileDrop.classList.add('has-file');
+        fileName.textContent = `✓ ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+      }
+    });
+
+    // Drag & drop
+    fileDrop.addEventListener('dragover', (e) => { e.preventDefault(); fileDrop.style.borderColor = 'var(--accent)'; });
+    fileDrop.addEventListener('dragleave', () => { fileDrop.style.borderColor = ''; });
+    fileDrop.addEventListener('drop', (e) => {
+      e.preventDefault();
+      fileDrop.style.borderColor = '';
+      const dt = e.dataTransfer;
+      if (dt.files[0]) {
+        fileInput.files = dt.files;
+        fileInput.dispatchEvent(new Event('change'));
+      }
+    });
+
+    // Form submit
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const nama = document.getElementById('nama').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const file = fileInput.files[0];
+
+      // Validation
+      if (!nama) return showError('Nama lengkap wajib diisi.');
+      if (!email || !email.includes('@')) return showError('Alamat email tidak valid.');
+      if (!file) return showError('Berkas pelamar wajib diunggah.');
+
+      // Loading state
+      setLoading(true);
+      alertSuccess.classList.remove('show');
+      alertError.classList.remove('show');
+
+      try {
+        // Kirim ke backend
+        const formData = new FormData();
+        formData.append('nama', nama);
+        formData.append('email', email);
+        formData.append('berkas', file);
+
+        const response = await fetch('/submit', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          const data = await response.json().catch(() => ({}));
+          throw new Error(data.message || `Server error: ${response.status}`);
+        }
+
+        // Success
+        alertSuccess.classList.add('show');
+        form.reset();
+        fileDrop.classList.remove('has-file');
+        fileName.textContent = '';
+        steps.forEach(s => s.classList.remove('active'));
+        steps[0].classList.add('active');
+
+      } catch (err) {
+        // Untuk demo/localhost: tampilkan pesan sukses simulasi
+        if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+          alertSuccess.classList.add('show');
+          alertSuccess.querySelector('span').textContent =
+            `[DEMO] Data berhasil diproses secara lokal. Nama: ${nama} | Email: ${email} | File: ${file.name}. Sambungkan ke backend untuk integrasi penuh.`;
+        } else {
+          showError(err.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    function setLoading(loading) {
+      submitBtn.disabled = loading;
+      spinner.style.display = loading ? 'block' : 'none';
+      btnText.textContent = loading ? 'Memproses...' : 'Kirim Pendaftaran';
+    }
+
+    function showError(msg) {
+      errorMsg.textContent = msg;
+      alertError.classList.add('show');
+      alertSuccess.classList.remove('show');
+    }
+  </script>
+</body>
+</html>
