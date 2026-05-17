@@ -13,29 +13,18 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-            # DEBUG - hapus setelah berhasil
-      - name: Debug Secrets
-        run: |
-          echo "Registry URL length: ${#REGISTRY}"
-          echo "Username length: ${#USERNAME}"
-          echo "Password length: ${#PASSWORD}"
-        env:
-          REGISTRY: ${{ secrets.CONTAINER_REGISTRY_URL }}
-          USERNAME: ${{ secrets.ACR_USERNAME }}
-          PASSWORD: ${{ secrets.ACR_PASSWORD }}
-
       # 2. Login ke Azure Container Registry
       - name: Login to Azure Container Registry
         uses: docker/login-action@v3
         with:
-          registry: repolandingpagekota204.azurecr.io
-          username: repolandingpageKoTA204
-          password: G5ayKr1KiNzhdzbTXsPP4zpSbxiHyguckT8Z7Ij9kaiAwrZXd6iwJQQJ99CDAC3pKaREqg7NAAACAZCRCL5a
+          registry: ${{ secrets.CONTAINER_REGISTRY_URL }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
       # 3. Build & Push Docker Image
       - name: Build and Push Docker Image
         run: |
-          IMAGE_TAG=repolandingpagekota204.azurecr.io/web-form-pendaftaran:${{ github.sha }}
+          IMAGE_TAG=${{ secrets.CONTAINER_REGISTRY_URL }}/web-form-pendaftaran:${{ github.sha }}
           docker build -t $IMAGE_TAG .
           docker push $IMAGE_TAG
 
@@ -47,8 +36,8 @@ jobs:
       # 5. Deploy ke Azure Container Apps
       - name: Deploy to Azure Container Apps
         run: |
-          IMAGE_TAG=repolandingpagekota204.azurecr.io/web-form-pendaftaran:${{ github.sha }}
+          IMAGE_TAG=${{ secrets.CONTAINER_REGISTRY_URL }}/web-form-pendaftaran:${{ github.sha }}
           az containerapp update \
-            --name env-landingpage \
-            --resource-group lab-landingpage \
+            --name ${{ secrets.SERVICE_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --image $IMAGE_TAG
