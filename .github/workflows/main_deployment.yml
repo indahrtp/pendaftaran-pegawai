@@ -1,0 +1,43 @@
+name: CI/CD Pipeline - Portal Pendaftaran Pegawai
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout Code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Login ke Azure Container Registry
+      - name: Login to Azure Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.CONTAINER_REGISTRY_URL }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      # 3. Build & Push Docker Image
+      - name: Build and Push Docker Image
+        run: |
+          IMAGE_TAG=${{ secrets.CONTAINER_REGISTRY_URL }}/web-form-pendaftaran:${{ github.sha }}
+          docker build -t $IMAGE_TAG .
+          docker push $IMAGE_TAG
+
+      # 4. Login ke Azure CLI pakai credentials
+      - name: Login to Azure CLI
+        run: |
+          az login --username ${{ secrets.AZURE_USERNAME }} --password ${{ secrets.AZURE_PASSWORD }}
+
+      # 5. Deploy ke Azure Container Apps
+      - name: Deploy to Azure Container Apps
+        run: |
+          IMAGE_TAG=${{ secrets.CONTAINER_REGISTRY_URL }}/web-form-pendaftaran:${{ github.sha }}
+          az containerapp update \
+            --name ${{ secrets.SERVICE_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --image $IMAGE_TAG
