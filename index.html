@@ -3,28 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Portal Pendaftaran Pegawai</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <title>Portal Pendaftaran Pegawai — v2.0</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fraunces:ital,wght@0,700;1,400&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0f0f0f;
-      --surface: #1a1a1a;
-      --surface2: #222;
-      --border: #2e2e2e;
-      --accent: #c8a96e;
-      --accent2: #e8c98e;
-      --text: #f0ece4;
-      --muted: #888;
-      --success: #4caf82;
-      --error: #e06b6b;
+      --bg: #f0f4ff;
+      --surface: #ffffff;
+      --surface2: #f8f9ff;
+      --border: #e2e8ff;
+      --accent: #4f46e5;
+      --accent2: #7c3aed;
+      --accent-light: rgba(79,70,229,0.08);
+      --text: #1e1b4b;
+      --muted: #6b7280;
+      --success: #059669;
+      --error: #dc2626;
     }
 
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -34,223 +35,236 @@
       overflow-x: hidden;
     }
 
-    /* Background decoration */
+    /* Decorative blobs */
     body::before {
       content: '';
       position: fixed;
-      top: -200px; right: -200px;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(200,169,110,0.08) 0%, transparent 70%);
+      top: -100px; right: -100px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(79,70,229,0.12) 0%, transparent 65%);
       pointer-events: none;
     }
     body::after {
       content: '';
       position: fixed;
-      bottom: -200px; left: -200px;
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(200,169,110,0.05) 0%, transparent 70%);
+      bottom: -100px; left: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(124,58,237,0.10) 0%, transparent 65%);
       pointer-events: none;
     }
 
     .wrapper {
       width: 100%;
-      max-width: 560px;
-      animation: fadeUp 0.7s ease both;
+      max-width: 580px;
+      animation: fadeUp 0.6s ease both;
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
+      from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Header */
-    .header {
-      margin-bottom: 2.5rem;
-    }
-    .header-tag {
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.75rem;
-      display: flex;
+    /* Version badge */
+    .version-badge {
+      display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-    }
-    .header-tag::before {
-      content: '';
-      width: 24px; height: 1px;
+      gap: 0.4rem;
       background: var(--accent);
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      padding: 0.3rem 0.75rem;
+      border-radius: 99px;
+      margin-bottom: 1.25rem;
     }
+    .version-badge::before {
+      content: '●';
+      font-size: 0.5rem;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Header */
+    .header { margin-bottom: 2rem; }
     .header h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.2rem;
+      font-family: 'Fraunces', serif;
+      font-size: 2.4rem;
       font-weight: 700;
-      line-height: 1.2;
+      line-height: 1.15;
       color: var(--text);
     }
-    .header h1 span {
+    .header h1 em {
+      font-style: italic;
       color: var(--accent);
     }
     .header p {
       margin-top: 0.75rem;
       color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.6;
-      font-weight: 300;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      font-weight: 400;
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 2rem;
+    }
+    .progress-segment {
+      flex: 1;
+      height: 4px;
+      border-radius: 99px;
+      background: var(--border);
+      transition: background 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .progress-segment.active {
+      background: var(--accent);
+    }
+    .progress-segment.active::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shimmer 1.5s infinite;
+    }
+    @keyframes shimmer {
+      from { transform: translateX(-100%); }
+      to   { transform: translateX(100%); }
     }
 
     /* Card */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: 20px;
       padding: 2.5rem;
-      position: relative;
-      overflow: hidden;
-    }
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      box-shadow: 0 4px 24px rgba(79,70,229,0.08), 0 1px 3px rgba(0,0,0,0.04);
     }
 
-    /* Form */
-    .form-group {
-      margin-bottom: 1.5rem;
+    /* Section label */
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Form group */
+    .form-group { margin-bottom: 1.25rem; }
     label {
       display: block;
-      font-size: 0.78rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.5rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.45rem;
     }
+    label span {
+      color: var(--accent);
+      margin-left: 2px;
+    }
+
     input[type="text"],
     input[type="email"] {
       width: 100%;
       background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.85rem 1rem;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
       color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.95rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.92rem;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
       outline: none;
     }
     input[type="text"]:focus,
     input[type="email"]:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(200,169,110,0.12);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
     }
-    input[type="text"]::placeholder,
-    input[type="email"]::placeholder {
-      color: #444;
-    }
+    input::placeholder { color: #c4c9d4; }
 
     /* File upload */
-    .file-upload {
-      position: relative;
-    }
+    .file-upload { position: relative; }
     .file-upload input[type="file"] {
       position: absolute;
       inset: 0;
       opacity: 0;
       cursor: pointer;
-      width: 100%;
-      height: 100%;
       z-index: 2;
     }
     .file-drop {
       background: var(--surface2);
-      border: 1.5px dashed var(--border);
-      border-radius: 8px;
-      padding: 2rem 1rem;
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 1.75rem 1rem;
       text-align: center;
-      transition: border-color 0.2s, background 0.2s;
+      transition: all 0.2s;
       cursor: pointer;
     }
-    .file-drop:hover,
-    .file-upload:has(input:focus) .file-drop {
-      border-color: var(--accent);
-      background: rgba(200,169,110,0.04);
+    .file-drop:hover { border-color: var(--accent); background: var(--accent-light); }
+    .file-drop.has-file { border-color: var(--success); background: rgba(5,150,105,0.05); border-style: solid; }
+    .upload-icon {
+      width: 44px; height: 44px;
+      background: var(--accent-light);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 0.75rem;
+      font-size: 1.3rem;
     }
-    .file-drop.has-file {
-      border-color: var(--success);
-      background: rgba(76,175,130,0.05);
-    }
-    .file-icon {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-      display: block;
-    }
-    .file-drop-text {
-      font-size: 0.88rem;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-    .file-drop-text strong {
-      color: var(--accent);
-      font-weight: 500;
-    }
-    .file-name {
-      margin-top: 0.5rem;
-      font-size: 0.82rem;
-      color: var(--success);
-      font-weight: 500;
-    }
+    .file-drop-text { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+    .file-drop-text strong { color: var(--accent); font-weight: 600; }
+    .file-name { margin-top: 0.5rem; font-size: 0.82rem; color: var(--success); font-weight: 600; }
 
     /* Divider */
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin: 2rem 0;
-    }
+    .divider { height: 1px; background: var(--border); margin: 2rem 0; }
 
     /* Submit button */
     .btn-submit {
       width: 100%;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #1a1200;
+      color: white;
       border: none;
-      border-radius: 8px;
-      padding: 1rem;
-      font-family: 'DM Sans', sans-serif;
+      border-radius: 10px;
+      padding: 0.95rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.95rem;
       font-weight: 600;
-      letter-spacing: 0.05em;
       cursor: pointer;
-      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      transition: all 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
+      box-shadow: 0 4px 15px rgba(79,70,229,0.3);
     }
-    .btn-submit:hover {
-      opacity: 0.92;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 24px rgba(200,169,110,0.25);
-    }
-    .btn-submit:active {
-      transform: translateY(0);
-    }
-    .btn-submit:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(79,70,229,0.4); }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
     /* Spinner */
     .spinner {
       width: 18px; height: 18px;
-      border: 2px solid rgba(26,18,0,0.3);
-      border-top-color: #1a1200;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
       border-radius: 50%;
       animation: spin 0.6s linear infinite;
       display: none;
@@ -259,8 +273,8 @@
 
     /* Alert */
     .alert {
-      border-radius: 8px;
-      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
       font-size: 0.88rem;
       margin-top: 1rem;
       display: none;
@@ -268,83 +282,74 @@
       gap: 0.5rem;
       line-height: 1.5;
     }
-    .alert.success {
-      background: rgba(76,175,130,0.1);
-      border: 1px solid rgba(76,175,130,0.3);
-      color: var(--success);
-    }
-    .alert.error {
-      background: rgba(224,107,107,0.1);
-      border: 1px solid rgba(224,107,107,0.3);
-      color: var(--error);
-    }
+    .alert.success { background: rgba(5,150,105,0.08); border: 1px solid rgba(5,150,105,0.25); color: var(--success); }
+    .alert.error { background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.25); color: var(--error); }
     .alert.show { display: flex; }
 
-    /* Note */
+    /* Info note */
     .note {
       margin-top: 1.5rem;
-      padding: 1rem;
-      background: rgba(200,169,110,0.06);
-      border-left: 2px solid var(--accent);
-      border-radius: 0 6px 6px 0;
+      padding: 1rem 1.1rem;
+      background: var(--accent-light);
+      border-radius: 10px;
       font-size: 0.8rem;
       color: var(--muted);
-      line-height: 1.6;
+      line-height: 1.65;
+      display: flex;
+      gap: 0.6rem;
     }
+    .note-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
     .note strong { color: var(--accent); }
 
-    /* Step indicator */
-    .steps {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 2rem;
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.78rem;
+      color: var(--muted);
     }
-    .step {
-      flex: 1;
-      height: 3px;
-      border-radius: 2px;
-      background: var(--border);
-      transition: background 0.3s;
-    }
-    .step.active { background: var(--accent); }
+    .footer strong { color: var(--accent); }
   </style>
 </head>
 <body>
   <div class="wrapper">
     <div class="header">
-      <div class="header-tag">HR System</div>
-      <h1>Portal Pendaftaran <span>Pegawai</span></h1>
-      <p>Isi formulir di bawah ini dengan lengkap dan benar. Pastikan dokumen yang diunggah dalam format gambar (JPG, PNG).</p>
+      <div class="version-badge">VERSI BARU — v2.0 AUTO DEPLOYED</div>
+      <h1>Portal <em>Pendaftaran</em><br>Pegawai Baru</h1>
+      <p>Lengkapi formulir di bawah ini. Data Anda akan disimpan dengan aman di layanan cloud terpisah.</p>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-segment active" id="seg1"></div>
+      <div class="progress-segment" id="seg2"></div>
+      <div class="progress-segment" id="seg3"></div>
     </div>
 
     <div class="card">
-      <div class="steps">
-        <div class="step active" id="step1"></div>
-        <div class="step" id="step2"></div>
-        <div class="step" id="step3"></div>
-      </div>
+      <div class="section-label">Data Diri Pelamar</div>
 
       <form id="registrationForm" novalidate>
-
         <div class="form-group">
-          <label for="nama">Nama Lengkap</label>
-          <input type="text" id="nama" name="nama" placeholder="Masukkan nama lengkap Anda" required />
+          <label for="nama">Nama Lengkap <span>*</span></label>
+          <input type="text" id="nama" name="nama" placeholder="Masukkan nama lengkap sesuai KTP" required />
         </div>
 
         <div class="form-group">
-          <label for="email">Alamat Email</label>
-          <input type="email" id="email" name="email" placeholder="contoh@email.com" required />
+          <label for="email">Alamat Email <span>*</span></label>
+          <input type="email" id="email" name="email" placeholder="contoh@perusahaan.com" required />
         </div>
 
+        <div class="section-label" style="margin-top:1.5rem;">Dokumen Pendukung</div>
+
         <div class="form-group">
-          <label>Berkas Pelamar (Foto KTP / CV)</label>
+          <label>Berkas Pelamar (Foto KTP / CV) <span>*</span></label>
           <div class="file-upload">
             <input type="file" id="berkas" name="berkas" accept="image/*,.pdf" required />
             <div class="file-drop" id="fileDrop">
-              <span class="file-icon">📎</span>
+              <div class="upload-icon">📎</div>
               <div class="file-drop-text">
                 <strong>Klik untuk unggah</strong> atau seret file ke sini<br>
-                Format: JPG, PNG, PDF — Maks. 5MB
+                JPG, PNG, PDF — Maksimal 5MB
               </div>
               <div class="file-name" id="fileName"></div>
             </div>
@@ -355,21 +360,25 @@
 
         <button type="submit" class="btn-submit" id="submitBtn">
           <span class="spinner" id="spinner"></span>
-          <span id="btnText">Kirim Pendaftaran</span>
+          <span id="btnText">Kirim Pendaftaran →</span>
         </button>
 
         <div class="alert success" id="alertSuccess">
-          ✅ <span>Pendaftaran berhasil dikirim! Data Anda telah tersimpan di database dan file telah diunggah ke Object Storage.</span>
+          ✅ <span>Pendaftaran berhasil dikirim! Data tersimpan di database dan file diunggah ke Object Storage.</span>
         </div>
         <div class="alert error" id="alertError">
           ❌ <span id="errorMsg">Terjadi kesalahan. Silakan coba lagi.</span>
         </div>
-
       </form>
 
       <div class="note">
-        <strong>Catatan Arsitektur:</strong> File yang diunggah akan disimpan ke <strong>Azure Blob Storage</strong>, sementara data teks (nama, email, URL file) akan disimpan ke <strong>Azure Database for PostgreSQL</strong> — bukan di server aplikasi.
+        <span class="note-icon">🏗️</span>
+        <span><strong>Arsitektur Cloud Native:</strong> File diunggah ke <strong>Azure Blob Storage</strong>. Data teks disimpan ke <strong>Azure PostgreSQL</strong>. Server aplikasi tidak menyimpan data apapun secara lokal.</span>
       </div>
+    </div>
+
+    <div class="footer">
+      Deployed otomatis via <strong>GitHub Actions CI/CD</strong> — v2.0
     </div>
   </div>
 
@@ -384,16 +393,9 @@
     const alertSuccess = document.getElementById('alertSuccess');
     const alertError = document.getElementById('alertError');
     const errorMsg = document.getElementById('errorMsg');
+    const segments = [document.getElementById('seg1'), document.getElementById('seg2'), document.getElementById('seg3')];
 
-    // Step progress animation
-    const steps = [document.getElementById('step1'), document.getElementById('step2'), document.getElementById('step3')];
-    let currentStep = 0;
-
-    document.getElementById('nama').addEventListener('input', updateSteps);
-    document.getElementById('email').addEventListener('input', updateSteps);
-    fileInput.addEventListener('change', updateSteps);
-
-    function updateSteps() {
+    function updateProgress() {
       const nama = document.getElementById('nama').value.trim();
       const email = document.getElementById('email').value.trim();
       const file = fileInput.files[0];
@@ -401,15 +403,16 @@
       if (nama) filled++;
       if (email && email.includes('@')) filled++;
       if (file) filled++;
-      steps.forEach((s, i) => s.classList.toggle('active', i < filled));
+      segments.forEach((s, i) => s.classList.toggle('active', i < filled));
     }
 
-    // File input handler
+    document.getElementById('nama').addEventListener('input', updateProgress);
+    document.getElementById('email').addEventListener('input', updateProgress);
     fileInput.addEventListener('change', () => {
       const file = fileInput.files[0];
       if (file) {
         if (file.size > 5 * 1024 * 1024) {
-          showError('Ukuran file melebihi 5MB. Pilih file yang lebih kecil.');
+          showError('Ukuran file melebihi 5MB.');
           fileInput.value = '';
           fileDrop.classList.remove('has-file');
           fileName.textContent = '';
@@ -418,70 +421,57 @@
         fileDrop.classList.add('has-file');
         fileName.textContent = `✓ ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
       }
+      updateProgress();
     });
 
-    // Drag & drop
     fileDrop.addEventListener('dragover', (e) => { e.preventDefault(); fileDrop.style.borderColor = 'var(--accent)'; });
     fileDrop.addEventListener('dragleave', () => { fileDrop.style.borderColor = ''; });
     fileDrop.addEventListener('drop', (e) => {
       e.preventDefault();
-      fileDrop.style.borderColor = '';
-      const dt = e.dataTransfer;
-      if (dt.files[0]) {
-        fileInput.files = dt.files;
+      if (e.dataTransfer.files[0]) {
+        fileInput.files = e.dataTransfer.files;
         fileInput.dispatchEvent(new Event('change'));
       }
     });
 
-    // Form submit
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-
       const nama = document.getElementById('nama').value.trim();
       const email = document.getElementById('email').value.trim();
       const file = fileInput.files[0];
 
-      // Validation
       if (!nama) return showError('Nama lengkap wajib diisi.');
       if (!email || !email.includes('@')) return showError('Alamat email tidak valid.');
       if (!file) return showError('Berkas pelamar wajib diunggah.');
 
-      // Loading state
       setLoading(true);
       alertSuccess.classList.remove('show');
       alertError.classList.remove('show');
 
       try {
-        // Kirim ke backend
         const formData = new FormData();
         formData.append('nama', nama);
         formData.append('email', email);
         formData.append('berkas', file);
 
-        const response = await fetch('/submit', {
-          method: 'POST',
-          body: formData
-        });
+        const response = await fetch('/submit', { method: 'POST', body: formData });
 
         if (!response.ok) {
           const data = await response.json().catch(() => ({}));
           throw new Error(data.message || `Server error: ${response.status}`);
         }
 
-        // Success
         alertSuccess.classList.add('show');
         form.reset();
         fileDrop.classList.remove('has-file');
         fileName.textContent = '';
-        steps.forEach(s => s.classList.remove('active'));
-        steps[0].classList.add('active');
+        segments.forEach((s, i) => s.classList.toggle('active', i === 0));
 
       } catch (err) {
-        // Untuk demo/localhost: tampilkan pesan sukses simulasi
         if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
           alertSuccess.classList.add('show');
           alertSuccess.querySelector('span').textContent =
-            `[DEMO] Data berhasil diproses secara lokal. Nama: ${nama} | Email: ${email} | File: ${file.name}. Sambungkan ke backend untuk integrasi penuh.`;
+            `[DEMO] Data diproses: ${nama} | ${email} | ${file.name}. Hubungkan ke backend untuk integrasi penuh.`;
         } else {
           showError(err.message);
         }
@@ -490,10 +480,10 @@
       }
     });
 
-    function setLoading(loading) {
-      submitBtn.disabled = loading;
-      spinner.style.display = loading ? 'block' : 'none';
-      btnText.textContent = loading ? 'Memproses...' : 'Kirim Pendaftaran';
+    function setLoading(v) {
+      submitBtn.disabled = v;
+      spinner.style.display = v ? 'block' : 'none';
+      btnText.textContent = v ? 'Memproses...' : 'Kirim Pendaftaran →';
     }
 
     function showError(msg) {
