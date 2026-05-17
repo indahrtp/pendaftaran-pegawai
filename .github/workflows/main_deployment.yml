@@ -31,11 +31,11 @@ jobs:
           registry: repolandingpagekota204.azurecr.io
           username: repolandingpageKoTA204
           password: G5ayKr1KiNzhdzbTXsPP4zpSbxiHyguckT8Z7Ij9kaiAwrZXd6iwJQQJ99CDAC3pKaREqg7NAAACAZCRCL5a
-          
+
       # 3. Build & Push Docker Image
       - name: Build and Push Docker Image
         run: |
-          IMAGE_TAG=${{ secrets.CONTAINER_REGISTRY_URL }}/web-form-pendaftaran:${{ github.sha }}
+          IMAGE_TAG=repolandingpagekota204.azurecr.io/web-form-pendaftaran:${{ github.sha }}
           docker build -t $IMAGE_TAG .
           docker push $IMAGE_TAG
 
@@ -47,8 +47,8 @@ jobs:
       # 5. Deploy ke Azure Container Apps
       - name: Deploy to Azure Container Apps
         run: |
-          IMAGE_TAG=${{ secrets.CONTAINER_REGISTRY_URL }}/web-form-pendaftaran:${{ github.sha }}
+          IMAGE_TAG=repolandingpagekota204.azurecr.io/web-form-pendaftaran:${{ github.sha }}
           az containerapp update \
-            --name ${{ secrets.SERVICE_NAME }} \
-            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --name env-landingpage \
+            --resource-group lab-landingpage \
             --image $IMAGE_TAG
